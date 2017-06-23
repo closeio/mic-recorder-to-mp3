@@ -1,0 +1,29 @@
+{
+  "name": "mic-recorder-to-mp3",
+  "version": "1.0.0",
+  "description": "Record your microphone audio input and get an audio/mp3 ouput buffer/blob.",
+  "main": "dist/mic-recorder.js",
+  "scripts": {
+    "build": "babel src --out-dir dist"
+  },
+  "repository": "git@github.com:djalmaaraujo/mic-recorder-to-mp3.git",
+  "author": "Djalma Araujo <djalma@close.io>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-preset-env": "^1.5.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env"
+      ]
+    ]
+  },
+  "peerDependencies": {
+    "lamejs": "git://github.com/zhuker/lamejs.git#c4638f8f4e7801d415aaabaae29d305d75c1bd38"
+  },
+  "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0"
+  }
+}
