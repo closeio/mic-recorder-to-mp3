@@ -2,6 +2,11 @@
 
 Record your microphone audio input and get an ```audio/mp3``` ouput buffer/blob.
 
+# Development
+```bash
+yarn
+```
+
 # Build
 
 ```bash
