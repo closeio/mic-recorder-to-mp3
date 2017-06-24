@@ -2,3 +2,4 @@ node_modules
 src
 .gitignore
 yarn.lock
+rollup.config.js
