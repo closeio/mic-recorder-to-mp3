@@ -32,6 +32,6 @@
     ]
   },
   "dependencies": {
-    "lamejs": "git://github.com/zhuker/lamejs.git#c4638f8f4e7801d415aaabaae29d305d75c1bd38"
+    "lamejs": "^1.2.0"
   }
 }

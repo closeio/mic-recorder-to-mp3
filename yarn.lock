@@ -760,9 +760,9 @@ kind-of@^4.0.0:
   dependencies:
     is-buffer "^1.1.5"
 
-"lamejs@git://github.com/zhuker/lamejs.git#c4638f8f4e7801d415aaabaae29d305d75c1bd38":
-  version "1.1.0"
-  resolved "git://github.com/zhuker/lamejs.git#c4638f8f4e7801d415aaabaae29d305d75c1bd38"
+lamejs@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/lamejs/-/lamejs-1.2.0.tgz#0259f83db4666141a7b671b8caa6369d95177d08"
   dependencies:
     use-strict "1.0.1"
 
