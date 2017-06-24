@@ -24,9 +24,9 @@ const recorder = return new MicRecorder({
 });
 
 // Start recording. Browser will request permission to use your microphone.
-recorder.start(function () {
+recorder.start(() => {
   console.log('Start voicemail recording');
-}, function () {
+}, () => {
   alert('We could not make use of your microphone at the moment');
 });
 
@@ -45,7 +45,7 @@ this.recorder
 
     player.play();
 
-  }), function (e) {
+  }), (e) => {
     alert('We could not retrieve your message');
     console.log(e);
   });
