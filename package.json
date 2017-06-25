@@ -8,6 +8,9 @@
   },
   "repository": "git@github.com:djalmaaraujo/mic-recorder-to-mp3.git",
   "author": "Djalma Araujo <djalma@close.io>",
+  "contributors: [
+    "Vitor Buzinaro <vitor@close.io>"
+  ],
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.25.0",
