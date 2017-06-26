@@ -17,4 +17,3 @@ export default {
   moduleName: 'MicRecorder',
   useStrict: false,
 }
-  

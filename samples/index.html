@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+
+  <h1>Mic Recorder to Mp3 Example</h1>
+  <p>Check your web developer tool console.</p>
+
+  <hr />
+
+  <button type="button" id="start">Record</button>
+  <button type="button" id="stop">Stop and listen</button>
+
+  <script src="https://unpkg.com/mic-recorder-to-mp3"></script>
+  <script>
+    document.querySelector('#start').addEventListener('click', function () {
+      // New instance
+      window.recorder = new MicRecorder({
+        bitRate: 128
+      });
+      // Start recording. Browser will request permission to use your microphone.
+      window.recorder.start(function () {
+        console.log('Start recording');
+      }, function () {
+        alert('We could not make use of your microphone at the moment');
+      });
+    });
+
+
+    document.querySelector('#stop').addEventListener('click', function () {
+      // Once you are done singing your best song, stop and get the mp3.
+      window.recorder
+        .stop()
+        .getMp3(function (buffer, blob) {
+          // do what ever you want with buffer and blob
+          // Example: Create a mp3 file and play
+          var file = new File(buffer, 'me-at-thevoice.mp3', {
+            type: blob.type,
+            lastModified: Date.now()
+          });
+
+          var player = new Audio(URL.createObjectURL(file));
+          player.play();
+
+        }, function (e) {
+          alert('We could not retrieve your message');
+          console.log(e);
+        });
+    })
+  </script>
+</body>
+</html>

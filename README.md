@@ -16,6 +16,12 @@ yarn add mic-recorder-to-mp3
 npm install mic-recorder-to-mp3
 ```
 
+## CDN Usage
+
+You can add via CDN using the address: [https://unpkg.com/mic-recorder-to-mp3@1.2.1](https://unpkg.com/mic-recorder-to-mp3@1.2.1). You can find the minified version in the same address, ex: [https://unpkg.com/mic-recorder-to-mp3@1.2.1/dist/index.min.js](https://unpkg.com/mic-recorder-to-mp3@1.2.1/dist/index.min.js)
+
+**About the version in URL**: Change the URL version to any of our releases.
+
 # How to use
 
 ```js
@@ -53,6 +59,13 @@ recorder
     console.log(e);
   });
 ```
+
+Check the [samples](https://github.com/djalmaaraujo/mic-recorder-to-mp3/tree/master/samples) folder for more examples.
+
+## Lamejs Notice
+This library uses lamejs as a direct dependency. We build our releases with [lamejs](https://github.com/zhuker/lamejs/) built-in, so you don't need to add another dependency.
+
+Thanks to **@zhuker** for writing the lamejs library.
 
 # License
 
