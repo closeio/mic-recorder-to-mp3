@@ -60,7 +60,7 @@ recorder
   });
 ```
 
-- Check the [samples](https://github.com/djalmaaraujo/mic-recorder-to-mp3/tree/master/samples) folder for more examples.
+- Check the [samples](https://github.com/closeio/mic-recorder-to-mp3/tree/master/samples) folder for more examples.
 
 - [Live example on jsfiddle](https://jsfiddle.net/8u5fbpx6/)
 

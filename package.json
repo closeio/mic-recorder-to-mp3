@@ -7,7 +7,7 @@
     "build": "rollup -c",
     "minify": "minify=true rollup -c"
   },
-  "repository": "git@github.com:djalmaaraujo/mic-recorder-to-mp3.git",
+  "repository": "git@github.com:closeio/mic-recorder-to-mp3.git",
   "author": "Djalma Araujo <djalma@close.io>",
   "contributors": [
     "Vitor Buzinaro <vitor@close.io>"
