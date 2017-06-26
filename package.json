@@ -4,7 +4,8 @@
   "description": "Record your microphone audio input and get an audio/mp3 ouput buffer/blob.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "node rollup.config.js"
+    "build": "rollup -c",
+    "minify": "minify=true rollup -c"
   },
   "repository": "git@github.com:djalmaaraujo/mic-recorder-to-mp3.git",
   "author": "Djalma Araujo <djalma@close.io>",
@@ -19,7 +20,8 @@
     "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0"
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
   },
   "babel": {
     "presets": [
