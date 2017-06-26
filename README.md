@@ -60,7 +60,9 @@ recorder
   });
 ```
 
-Check the [samples](https://github.com/djalmaaraujo/mic-recorder-to-mp3/tree/master/samples) folder for more examples.
+- Check the [samples](https://github.com/djalmaaraujo/mic-recorder-to-mp3/tree/master/samples) folder for more examples.
+
+- [Live example on jsfiddle](https://jsfiddle.net/8u5fbpx6/)
 
 ## Lamejs Notice
 This library uses lamejs as a direct dependency. We build our releases with [lamejs](https://github.com/zhuker/lamejs/) built-in, so you don't need to add another dependency.
