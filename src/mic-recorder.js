@@ -98,9 +98,7 @@ class MicRecorder {
   getMp3(callback) {
     const finalBuffer = this.lameEncoder.finish();
 
-    console.log('MP3 data size', finalBuffer.length);
     callback(finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' }));
-
     this.lameEncoder.clearBuffer();
   };
 };
