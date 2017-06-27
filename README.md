@@ -1,6 +1,6 @@
 # Microphone Recorder to Mp3
 
-Record your microphone audio input and get a ```audio/mp3``` file in the end.
+Record your microphone audio input and get an ```audio/mp3``` file in the end.
 
 # Install
 
@@ -10,7 +10,7 @@ Record your microphone audio input and get a ```audio/mp3``` file in the end.
 yarn add mic-recorder-to-mp3
 ```
 
-## NPM
+## npm
 
 ```bash
 npm install mic-recorder-to-mp3
@@ -65,6 +65,7 @@ recorder
 - [Live example on jsfiddle](https://jsfiddle.net/8u5fbpx6/)
 
 ## Lamejs Notice
+
 This library uses lamejs as a direct dependency. We build our releases with [lamejs](https://github.com/zhuker/lamejs/) built-in, so you don't need to add another dependency.
 
 Thanks to **@zhuker** for writing the lamejs library.
