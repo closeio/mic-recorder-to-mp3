@@ -22,6 +22,20 @@ You can add via CDN using the address: [https://unpkg.com/mic-recorder-to-mp3@1.
 
 **About the version in URL**: Change the URL version to any of our releases.
 
+# Development
+
+- Watch for changes:
+
+```bash
+npm run watch
+```
+
+- Regular build:
+
+```bash
+npm run build
+```
+
 # How to use
 
 ```js
@@ -42,22 +56,22 @@ recorder.start(function () {
 
 // Once you are done singing your best song, stop and get the mp3.
 recorder
-  .stop()
-  .getMp3((buffer, blob) => {
-    // do what ever you want with buffer and blob
-    // Example: Create a mp3 file and play
-    const file = new File(buffer, 'me-at-thevoice.mp3', {
-      type: blob.type,
-      lastModified: Date.now()
-    });
+.stop()
+.getMp3((buffer, blob) => {
+// do what ever you want with buffer and blob
+// Example: Create a mp3 file and play
+const file = new File(buffer, 'me-at-thevoice.mp3', {
+  type: blob.type,
+  lastModified: Date.now()
+});
 
-    const player = new Audio(URL.createObjectURL(file));
-    player.play();
+const player = new Audio(URL.createObjectURL(file));
+player.play();
 
-  }, function (e) {
-    alert('We could not retrieve your message');
-    console.log(e);
-  });
+}, function (e) {
+  alert('We could not retrieve your message');
+  console.log(e);
+});
 ```
 
 - Check the [samples](https://github.com/closeio/mic-recorder-to-mp3/tree/master/samples) folder for more examples.
