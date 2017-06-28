@@ -3,53 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
+  <div class="container text-center">
+    <h1>Mic Recorder to Mp3 Example</h1>
+    <p>Check your web developer tool console.</p>
 
-  <h1>Mic Recorder to Mp3 Example</h1>
-  <p>Check your web developer tool console.</p>
+    <hr />
 
-  <hr />
+    <button class="btn btn-primary">Start recording</button>
 
-  <button type="button" id="start">Record</button>
-  <button type="button" id="stop">Stop and listen</button>
+    <br />
+    <br />
+    <br />
+
+    <ul id="playlist"></ul>
+  </div>
 
   <script src="https://unpkg.com/mic-recorder-to-mp3"></script>
+  <!-- <script src="../dist/index.js"></script> -->
   <script>
-    document.querySelector('#start').addEventListener('click', function () {
-      // New instance
-      window.recorder = new MicRecorder({
-        bitRate: 128
-      });
-      // Start recording. Browser will request permission to use your microphone.
-      window.recorder.start(function () {
-        console.log('Start recording');
-      }, function () {
-        alert('We could not make use of your microphone at the moment');
-      });
+    const button = document.querySelector('button');
+    const recorder = new MicRecorder({
+      bitRate: 128
     });
 
+    button.addEventListener('click', startRecording);
 
-    document.querySelector('#stop').addEventListener('click', function () {
-      // Once you are done singing your best song, stop and get the mp3.
-      window.recorder
+    function startRecording() {
+      recorder.start(() => {
+        button.textContent = 'Stop recording';
+        button.classList.toggle('btn-danger');
+        button.removeEventListener('click', startRecording);
+        button.addEventListener('click', stopRecording);
+      }, (e) => {
+        console.error(e);
+      });
+    }
+
+    function stopRecording() {
+      recorder
         .stop()
-        .getMp3(function (buffer, blob) {
-          // do what ever you want with buffer and blob
-          // Example: Create a mp3 file and play
-          var file = new File(buffer, 'me-at-thevoice.mp3', {
+        .getMp3((buffer, blob) => {
+          const file = new File(buffer, 'music.mp3', {
             type: blob.type,
             lastModified: Date.now()
           });
 
-          var player = new Audio(URL.createObjectURL(file));
-          player.play();
+          const li = document.createElement('li');
+          const player = new Audio(URL.createObjectURL(file));
+          player.controls = true;
+          li.appendChild(player);
+          document.querySelector('#playlist').appendChild(li);
 
-        }, function (e) {
-          alert('We could not retrieve your message');
-          console.log(e);
+          button.textContent = 'Start recording';
+          button.classList.toggle('btn-danger');
+          button.removeEventListener('click', stopRecording);
+          button.addEventListener('click', startRecording);
         });
-    })
+    }
   </script>
 </body>
 </html>
