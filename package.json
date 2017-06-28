@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rollup -c",
-    "minify": "minify=true rollup -c"
+    "minify": "minify=true rollup -c",
+    "watch": "rollup -c -w"
   },
   "repository": "git@github.com:closeio/mic-recorder-to-mp3.git",
   "author": "Djalma Araujo <djalma@close.io>",
@@ -21,7 +22,8 @@
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify": "^2.0.1"
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.0.0"
   },
   "babel": {
     "presets": [
@@ -37,6 +39,7 @@
     ]
   },
   "dependencies": {
-    "lamejs": "^1.2.0"
+    "lamejs": "^1.2.0",
+    "webrtc-adapter": "^4.0.2"
   }
 }

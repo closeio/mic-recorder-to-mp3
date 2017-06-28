@@ -6,7 +6,7 @@ class Encoder {
     this.mp3Encoder = new Mp3Encoder(
       1,
       this.config.sampleRate || 44100,
-      this.config.bitRate || 123
+      this.config.bitRate || 128
     );
 
     this.maxSamples = 1152;

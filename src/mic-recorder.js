@@ -1,39 +1,28 @@
+import 'webrtc-adapter';
 import Encoder from './encoder';
-
-// getUserMedia Shim
-navigator.getUserMedia = navigator.getUserMedia ||
-  navigator.webkitGetUserMedia ||
-  navigator.mozGetUserMedia ||
-  navigator.msGetUserMedia;
 
 class MicRecorder {
   constructor(config) {
-    this.startTime = 0;
+    this.activeStream = null;
+    this.context = null;
     this.microphone = null;
     this.processor = null;
-    this.activeStream = null;
+    this.startTime = 0;
 
     this.config = config || {};
-  }
-
-  /**
-   * Returns a new AudioContext instance
-   */
-  createAudioContext() {
-    return new AudioContext();
   }
 
   /**
    * Starts to listen for the microphone sound
    * @param {MediaStream} stream
    */
-  beginRecording(stream) {
+  addMicrophoneListener(stream) {
     this.activeStream = stream;
 
     // This prevents the weird noise once you start listening to the microphone
     this.timerToStart = setTimeout(() => {
       delete this.timerToStart;
-    }, 10);
+    }, 100);
 
     // Set up Web Audio API to process data from the media stream (microphone).
     this.microphone = this.context.createMediaStreamSource(stream);
@@ -64,6 +53,7 @@ class MicRecorder {
       // Clean up the Web Audio API resources.
       this.microphone.disconnect();
       this.processor.disconnect();
+      this.context.close();
       this.processor.onaudioprocess = null;
 
       // Remove recording icon from chrome tab
@@ -78,17 +68,18 @@ class MicRecorder {
    * @param {Function} callback
    * @param {Function} callbackError
    */
-  start(callback, callbackError) {
-    this.context = this.createAudioContext();
+  start(callback, callbackError = null) {
+    this.context = new AudioContext();
     this.config.sampleRate = this.context.sampleRate;
     this.lameEncoder = new Encoder(this.config);
 
-    navigator.getUserMedia({ audio: true }, (stream) => {
-      this.beginRecording(stream);
-      callback(stream);
-    }, (error) => {
-      callbackError(error);
-    });
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        this.addMicrophoneListener(stream);
+        callback(stream);
+      }).catch(function(err) {
+        if (callbackError) callbackError(err);
+      });
   };
 
   /**
