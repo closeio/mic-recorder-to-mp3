@@ -18,7 +18,7 @@ npm install mic-recorder-to-mp3
 
 ## CDN Usage
 
-You can add via CDN using the address: [https://unpkg.com/mic-recorder-to-mp3@1.2.2](https://unpkg.com/mic-recorder-to-mp3@1.2.2). You can find the minified version in the same address, ex: [https://unpkg.com/mic-recorder-to-mp3@1.2.2/dist/index.min.js](https://unpkg.com/mic-recorder-to-mp3@1.2.2/dist/index.min.js)
+You can add via CDN using the address: [https://unpkg.com/mic-recorder-to-mp3@1.2.3](https://unpkg.com/mic-recorder-to-mp3@1.2.3). You can find the minified version in the same address, ex: [https://unpkg.com/mic-recorder-to-mp3@1.2.3/dist/index.min.js](https://unpkg.com/mic-recorder-to-mp3@1.2.3/dist/index.min.js)
 
 **About the version in URL**: Change the URL version to any of our releases.
 
