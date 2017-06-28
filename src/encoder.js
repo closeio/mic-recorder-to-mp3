@@ -2,11 +2,17 @@ import { Mp3Encoder } from 'lamejs';
 
 class Encoder {
   constructor(config) {
-    this.config = config;
+    this.config = {
+      sampleRate: 44100,
+      bitRate: 128
+    };
+
+    Object.assign(this.config, config);
+
     this.mp3Encoder = new Mp3Encoder(
       1,
-      this.config.sampleRate || 44100,
-      this.config.bitRate || 128
+      this.config.sampleRate,
+      this.config.bitRate
     );
 
     this.maxSamples = 1152;

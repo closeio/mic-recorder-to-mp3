@@ -19395,8 +19395,14 @@ var Encoder = function () {
   function Encoder(config) {
     classCallCheck(this, Encoder);
 
-    this.config = config;
-    this.mp3Encoder = new Mp3Encoder_1(1, this.config.sampleRate || 44100, this.config.bitRate || 128);
+    this.config = {
+      sampleRate: 44100,
+      bitRate: 128
+    };
+
+    Object.assign(this.config, config);
+
+    this.mp3Encoder = new Mp3Encoder_1(1, this.config.sampleRate, this.config.bitRate);
 
     this.maxSamples = 1152;
     this.samplesMono = null;
@@ -19493,13 +19499,18 @@ var MicRecorder = function () {
   function MicRecorder(config) {
     classCallCheck(this, MicRecorder);
 
+    this.config = {
+      bitRate: 128,
+      startRecordingAt: 100 // milliseconds
+    };
+
     this.activeStream = null;
     this.context = null;
     this.microphone = null;
     this.processor = null;
     this.startTime = 0;
 
-    this.config = config || {};
+    Object.assign(this.config, config);
   }
 
   /**
@@ -19518,7 +19529,7 @@ var MicRecorder = function () {
       // This prevents the weird noise once you start listening to the microphone
       this.timerToStart = setTimeout(function () {
         delete _this.timerToStart;
-      }, 100);
+      }, this.config.startRecordingAt);
 
       // Set up Web Audio API to process data from the media stream (microphone).
       this.microphone = this.context.createMediaStreamSource(stream);

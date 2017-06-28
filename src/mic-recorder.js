@@ -3,13 +3,18 @@ import Encoder from './encoder';
 
 class MicRecorder {
   constructor(config) {
+    this.config = {
+      bitRate: 128,
+      startRecordingAt: 100 // milliseconds
+    };
+
     this.activeStream = null;
     this.context = null;
     this.microphone = null;
     this.processor = null;
     this.startTime = 0;
 
-    this.config = config || {};
+    Object.assign(this.config, config);
   }
 
   /**
@@ -22,7 +27,7 @@ class MicRecorder {
     // This prevents the weird noise once you start listening to the microphone
     this.timerToStart = setTimeout(() => {
       delete this.timerToStart;
-    }, 100);
+    }, this.config.startRecordingAt);
 
     // Set up Web Audio API to process data from the media stream (microphone).
     this.microphone = this.context.createMediaStreamSource(stream);
