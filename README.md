@@ -47,28 +47,27 @@ const recorder = new MicRecorder({
 });
 
 // Start recording. Browser will request permission to use your microphone.
-recorder.start(function () {
-  console.log('Start recording');
-}, function () {
-  alert('We could not make use of your microphone at the moment');
+recorder.start().then(() => {
+  // something else
+}).catch((e) => {
+  console.error(e);
 });
-
 
 // Once you are done singing your best song, stop and get the mp3.
 recorder
 .stop()
-.getMp3((buffer, blob) => {
-// do what ever you want with buffer and blob
-// Example: Create a mp3 file and play
-const file = new File(buffer, 'me-at-thevoice.mp3', {
-  type: blob.type,
-  lastModified: Date.now()
-});
+.getMp3().then(([buffer, blob]) => {
+  // do what ever you want with buffer and blob
+  // Example: Create a mp3 file and play
+  const file = new File(buffer, 'me-at-thevoice.mp3', {
+    type: blob.type,
+    lastModified: Date.now()
+  });
 
-const player = new Audio(URL.createObjectURL(file));
-player.play();
+  const player = new Audio(URL.createObjectURL(file));
+  player.play();
 
-}, function (e) {
+}).catch((e) => {
   alert('We could not retrieve your message');
   console.log(e);
 });

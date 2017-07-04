@@ -5,7 +5,7 @@ class MicRecorder {
   constructor(config) {
     this.config = {
       bitRate: 128,
-      startRecordingAt: 100 // milliseconds
+      startRecordingAt: 300 // milliseconds
     };
 
     this.activeStream = null;
@@ -70,32 +70,39 @@ class MicRecorder {
 
   /**
    * Requests access to the microphone and start recording
-   * @param {Function} callback
-   * @param {Function} callbackError
+   * @return Promise
    */
-  start(callback, callbackError = null) {
+  start() {
     this.context = new AudioContext();
     this.config.sampleRate = this.context.sampleRate;
     this.lameEncoder = new Encoder(this.config);
 
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        this.addMicrophoneListener(stream);
-        callback(stream);
-      }).catch(function(err) {
-        if (callbackError) callbackError(err);
-      });
+    return new Promise((resolve, reject) => {
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          this.addMicrophoneListener(stream);
+          resolve(stream);
+        }).catch(function(err) {
+          reject(err);
+        });
+    })
   };
 
   /**
    * Return Mp3 Buffer and Blob with type mp3
-   * @param {Function} callback
+   * @return {Promise}
    */
-  getMp3(callback) {
+  getMp3() {
     const finalBuffer = this.lameEncoder.finish();
 
-    callback(finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' }));
-    this.lameEncoder.clearBuffer();
+    return new Promise((resolve, reject) => {
+      if (finalBuffer.length === 0) {
+        reject(new Error('No buffer to send'));
+      } else {
+        resolve([finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' })]);
+        this.lameEncoder.clearBuffer();
+      }
+    });
   };
 };
 

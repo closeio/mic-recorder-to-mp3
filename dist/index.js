@@ -19501,7 +19501,7 @@ var MicRecorder = function () {
 
     this.config = {
       bitRate: 128,
-      startRecordingAt: 100 // milliseconds
+      startRecordingAt: 300 // milliseconds
     };
 
     this.activeStream = null;
@@ -19580,23 +19580,22 @@ var MicRecorder = function () {
 
     /**
      * Requests access to the microphone and start recording
-     * @param {Function} callback
-     * @param {Function} callbackError
+     * @return Promise
      */
-    value: function start(callback) {
+    value: function start() {
       var _this2 = this;
-
-      var callbackError = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
       this.context = new AudioContext();
       this.config.sampleRate = this.context.sampleRate;
       this.lameEncoder = new Encoder(this.config);
 
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
-        _this2.addMicrophoneListener(stream);
-        callback(stream);
-      }).catch(function (err) {
-        if (callbackError) callbackError(err);
+      return new Promise(function (resolve, reject) {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+          _this2.addMicrophoneListener(stream);
+          resolve(stream);
+        }).catch(function (err) {
+          reject(err);
+        });
       });
     }
   }, {
@@ -19605,13 +19604,21 @@ var MicRecorder = function () {
 
     /**
      * Return Mp3 Buffer and Blob with type mp3
-     * @param {Function} callback
+     * @return {Promise}
      */
-    value: function getMp3(callback) {
+    value: function getMp3() {
+      var _this3 = this;
+
       var finalBuffer = this.lameEncoder.finish();
 
-      callback(finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' }));
-      this.lameEncoder.clearBuffer();
+      return new Promise(function (resolve, reject) {
+        if (finalBuffer.length === 0) {
+          reject(new Error('No buffer to send'));
+        } else {
+          resolve([finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' })]);
+          _this3.lameEncoder.clearBuffer();
+        }
+      });
     }
   }]);
   return MicRecorder;
