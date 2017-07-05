@@ -15,7 +15,10 @@ class Encoder {
       this.config.bitRate
     );
 
+    // Audio is processed by frames of 1152 samples per audio channel
+    // http://lame.sourceforge.net/tech-FAQ.txt
     this.maxSamples = 1152;
+
     this.samplesMono = null;
     this.clearBuffer();
   }
