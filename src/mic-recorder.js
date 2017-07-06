@@ -1,4 +1,3 @@
-import 'webrtc-adapter';
 import Encoder from './encoder';
 
 class MicRecorder {
@@ -58,10 +57,16 @@ class MicRecorder {
       // Clean up the Web Audio API resources.
       this.microphone.disconnect();
       this.processor.disconnect();
-      this.context.close();
+
+      // If all references using this.context are destroyed, context is closed
+      // automatically. DOMException is fired when trying to close again
+      if (this.context && this.context.state !== 'closed') {
+        this.context.close();
+      }
+
       this.processor.onaudioprocess = null;
 
-      // Remove recording icon from chrome tab
+      // Stop all audio tracks. Also, removes recording icon from chrome tab
       this.activeStream.getAudioTracks().forEach(track => track.stop());
     }
 

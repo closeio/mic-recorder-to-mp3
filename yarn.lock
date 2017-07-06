@@ -1675,9 +1675,9 @@ vlq@^0.2.1:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/vlq/-/vlq-0.2.2.tgz#e316d5257b40b86bb43cb8d5fea5d7f54d6b0ca1"
 
-webrtc-adapter@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-4.0.2.tgz#f9d1d0604d7937766fb4b672ba235af70feada2b"
+webrtc-adapter@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-4.1.1.tgz#bb815b6430b9c36dac9c3756d0c9ce438b34e336"
   dependencies:
     sdp "^2.1.0"
 

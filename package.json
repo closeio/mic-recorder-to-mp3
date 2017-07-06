@@ -39,7 +39,9 @@
     ]
   },
   "dependencies": {
-    "lamejs": "^1.2.0",
-    "webrtc-adapter": "^4.0.2"
+    "lamejs": "^1.2.0"
+  },
+  "peerDependencies": {
+    "webrtc-adapter": "^4.1.1"
   }
 }
