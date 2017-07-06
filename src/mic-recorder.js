@@ -3,8 +3,11 @@ import Encoder from './encoder';
 class MicRecorder {
   constructor(config) {
     this.config = {
+      // 128 or 160 kbit/s – mid-range bitrate quality
       bitRate: 128,
-      startRecordingAt: 300 // milliseconds
+
+      // Some browsers have a weird noise when starting the recording, this removes some milliseconds of the mp3 file
+      startRecordingAt: 300
     };
 
     this.activeStream = null;
