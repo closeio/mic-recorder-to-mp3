@@ -1,6 +1,6 @@
 {
   "name": "mic-recorder-to-mp3",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Record your microphone audio input and get an audio/mp3 ouput buffer/blob.",
   "main": "dist/index.js",
   "scripts": {
