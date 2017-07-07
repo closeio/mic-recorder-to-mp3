@@ -15816,7 +15816,11 @@ var MicRecorder = function () {
       // 128 or 160 kbit/s – mid-range bitrate quality
       bitRate: 128,
 
-      // Some browsers have a weird noise when starting the recording, this removes some milliseconds of the mp3 file
+      // There is a known issue with some macOS machines, where the recording
+      // will sometimes have a loud 'pop' or 'pop-click' sound. This flag
+      // prevents getting audio from the microphone a few milliseconds after
+      // the begining of the recording. It also helps to remove the mouse
+      // "click" sound from the output mp3 file.
       startRecordingAt: 300
     };
 
