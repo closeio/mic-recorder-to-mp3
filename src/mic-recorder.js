@@ -11,7 +11,8 @@ class MicRecorder {
       // prevents getting audio from the microphone a few milliseconds after
       // the begining of the recording. It also helps to remove the mouse
       // "click" sound from the output mp3 file.
-      startRecordingAt: 300
+      startRecordingAt: 300,
+      deviceId: 'default',
     };
 
     this.activeStream = null;
@@ -89,8 +90,10 @@ class MicRecorder {
     this.config.sampleRate = this.context.sampleRate;
     this.lameEncoder = new Encoder(this.config);
 
+    const audio = { deviceId: { exact: this.config.deviceId } };
+
     return new Promise((resolve, reject) => {
-      navigator.mediaDevices.getUserMedia({ audio: true })
+      navigator.mediaDevices.getUserMedia({ audio })
         .then(stream => {
           this.addMicrophoneListener(stream);
           resolve(stream);
