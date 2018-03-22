@@ -15944,6 +15944,7 @@ var MicRecorder = function () {
         } else {
           resolve([finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' })]);
           _this3.lameEncoder.clearBuffer();
+          _this3.context
         }
       });
     }

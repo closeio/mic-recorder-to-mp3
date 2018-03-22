@@ -85,7 +85,8 @@ class MicRecorder {
    * @return Promise
    */
   start() {
-    this.context = new AudioContext();
+    // this.context = new AudioContext();
+    this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.config.sampleRate = this.context.sampleRate;
     this.lameEncoder = new Encoder(this.config);
 
