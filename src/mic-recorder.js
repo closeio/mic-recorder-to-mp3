@@ -90,10 +90,8 @@ class MicRecorder {
     this.config.sampleRate = this.context.sampleRate;
     this.lameEncoder = new Encoder(this.config);
 
-    const audio = { deviceId: { exact: this.config.deviceId } };
-
     return new Promise((resolve, reject) => {
-      navigator.mediaDevices.getUserMedia({ audio })
+      navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
           this.addMicrophoneListener(stream);
           resolve(stream);
