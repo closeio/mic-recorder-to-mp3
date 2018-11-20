@@ -12,7 +12,7 @@ class MicRecorder {
       // the begining of the recording. It also helps to remove the mouse
       // "click" sound from the output mp3 file.
       startRecordingAt: 300,
-      deviceId: 'default',
+      deviceId: null,
     };
 
     this.activeStream = null;
@@ -90,7 +90,7 @@ class MicRecorder {
     this.config.sampleRate = this.context.sampleRate;
     this.lameEncoder = new Encoder(this.config);
 
-    const audio = { deviceId: { exact: this.config.deviceId } };
+    const audio = this.config.deviceId ? { deviceId: { exact: this.config.deviceId } } : true;
 
     return new Promise((resolve, reject) => {
       navigator.mediaDevices.getUserMedia({ audio })
