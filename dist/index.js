@@ -15912,6 +15912,7 @@ var MicRecorder = function () {
     value: function start() {
       var _this2 = this;
 
+      var AudioContext = window.AudioContext || window.webkitAudioContext;
       this.context = new AudioContext();
       this.config.sampleRate = this.context.sampleRate;
       this.lameEncoder = new Encoder(this.config);
