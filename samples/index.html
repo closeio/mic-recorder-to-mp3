@@ -12,7 +12,8 @@
 
     <hr />
 
-    <button class="btn btn-primary">Start recording</button>
+    <button id="start-pause" class="btn btn-primary"></button>
+    <button id="stop" class="btn btn-danger" disabled></button>
 
     <br />
     <br />
@@ -25,19 +26,43 @@
   <!-- <script src="https://unpkg.com/mic-recorder-to-mp3"></script> -->
   <script src="../dist/index.js"></script>
   <script>
-    const button = document.querySelector('button');
+    const LABELS = {
+      START: 'Start recording',
+      PAUSE: 'Pause recording',
+      RESUME: 'Resume recording',
+      STOP: 'Stop recording'
+    };
+
+    const startPauseButton = document.getElementById('start-pause');
+    const stopButton = document.getElementById('stop');
     const recorder = new MicRecorder({
       bitRate: 128
     });
 
-    button.addEventListener('click', startRecording);
+    startPauseButton.textContent = LABELS.START;
+    stopButton.textContent = LABELS.STOP;
+
+    startPauseButton.addEventListener('click', startRecording);
+    stopButton.addEventListener('click', stopRecording);
 
     function startRecording() {
       recorder.start().then(() => {
-        button.textContent = 'Stop recording';
-        button.classList.toggle('btn-danger');
-        button.removeEventListener('click', startRecording);
-        button.addEventListener('click', stopRecording);
+        startPauseButton.textContent = LABELS.PAUSE;
+        startPauseButton.classList.add('btn-info');
+        stopButton.disabled = false;
+        startPauseButton.removeEventListener('click', startRecording);
+        startPauseButton.addEventListener('click', pauseRecording);
+      }).catch((e) => {
+        console.error(e);
+      });
+    }
+
+    function pauseRecording() {
+      recorder.pause().then(() => {
+        startPauseButton.textContent = LABELS.RESUME;
+        startPauseButton.classList.remove('btn-info');
+        startPauseButton.removeEventListener('click', pauseRecording);
+        startPauseButton.addEventListener('click', startRecording);
       }).catch((e) => {
         console.error(e);
       });
@@ -46,6 +71,7 @@
     function stopRecording() {
       recorder.stop().getMp3().then(([buffer, blob]) => {
         console.log(buffer, blob);
+        stopButton.disabled = true;
         const file = new File(buffer, 'music.mp3', {
           type: blob.type,
           lastModified: Date.now()
@@ -57,10 +83,11 @@
         li.appendChild(player);
         document.querySelector('#playlist').appendChild(li);
 
-        button.textContent = 'Start recording';
-        button.classList.toggle('btn-danger');
-        button.removeEventListener('click', stopRecording);
-        button.addEventListener('click', startRecording);
+        startPauseButton.textContent = LABELS.START;
+        startPauseButton.classList.remove('btn-info');
+        startPauseButton.removeEventListener('click', startRecording);
+        startPauseButton.removeEventListener('click', pauseRecording);
+        startPauseButton.addEventListener('click', startRecording);
       }).catch((e) => {
         console.error(e);
       });
