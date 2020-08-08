@@ -15868,48 +15868,17 @@ var MicRecorder = function () {
         _this.lameEncoder.encode(event.inputBuffer.getChannelData(0));
       };
 
-      // Begin retrieving microphone data.
-      this.microphone.connect(this.processor);
-      this.processor.connect(this.context.destination);
+      this.connectMicrophone();
     }
   }, {
-    key: 'stop',
+    key: 'initialize',
 
 
     /**
-     * Disconnect microphone, processor and remove activeStream
-     */
-    value: function stop() {
-      if (this.processor && this.microphone) {
-        // Clean up the Web Audio API resources.
-        this.microphone.disconnect();
-        this.processor.disconnect();
-
-        // If all references using this.context are destroyed, context is closed
-        // automatically. DOMException is fired when trying to close again
-        if (this.context && this.context.state !== 'closed') {
-          this.context.close();
-        }
-
-        this.processor.onaudioprocess = null;
-
-        // Stop all audio tracks. Also, removes recording icon from chrome tab
-        this.activeStream.getAudioTracks().forEach(function (track) {
-          return track.stop();
-        });
-      }
-
-      return this;
-    }
-  }, {
-    key: 'start',
-
-
-    /**
-     * Requests access to the microphone and start recording
+     * Requests access to the microphone and starts recording
      * @return Promise
      */
-    value: function start() {
+    value: function initialize() {
       var _this2 = this;
 
       var AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -15929,12 +15898,97 @@ var MicRecorder = function () {
       });
     }
   }, {
+    key: 'start',
+
+
+    /**
+     * Initializes or resumes recording
+     * @return Promise
+     */
+    value: function start() {
+      if (!this.processor || !this.microphone) {
+        return this.initialize();
+      } else {
+        this.connectMicrophone();
+        return Promise.resolve();
+      }
+    }
+
+    /**
+     * Pause recording
+     * @return Promise
+     */
+
+  }, {
+    key: 'pause',
+    value: function pause() {
+      this.disconnectMicrophone();
+      return Promise.resolve();
+    }
+  }, {
+    key: 'connectMicrophone',
+
+
+    /**
+     * Start retrieving microphone data
+     */
+    value: function connectMicrophone() {
+      if (this.processor && this.microphone) {
+        this.microphone.connect(this.processor);
+        this.processor.connect(this.context.destination);
+      }
+    }
+
+    /**
+     * Stop retrieving microphone data
+     */
+
+  }, {
+    key: 'disconnectMicrophone',
+    value: function disconnectMicrophone() {
+      if (this.processor && this.microphone) {
+        this.microphone.disconnect();
+        this.processor.disconnect();
+      }
+    }
+
+    /**
+     * Disconnect microphone, processor and remove activeStream
+     * @return MicRecorder
+     */
+
+  }, {
+    key: 'stop',
+    value: function stop() {
+      if (this.processor && this.microphone) {
+        // Clean up the Web Audio API resources.
+        this.disconnectMicrophone();
+
+        // If all references using this.context are destroyed, context is closed
+        // automatically. DOMException is fired when trying to close again
+        if (this.context && this.context.state !== 'closed') {
+          this.context.close();
+        }
+
+        this.processor.onaudioprocess = null;
+
+        // Stop all audio tracks. Also, removes recording icon from chrome tab
+        this.activeStream.getAudioTracks().forEach(function (track) {
+          return track.stop();
+        });
+        this.processor = null;
+        this.microphone = null;
+      }
+
+      return this;
+    }
+  }, {
     key: 'getMp3',
 
 
     /**
      * Return Mp3 Buffer and Blob with type mp3
-     * @return {Promise}
+     * @return Promise
      */
     value: function getMp3() {
       var _this3 = this;
