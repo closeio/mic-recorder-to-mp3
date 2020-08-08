@@ -6,13 +6,17 @@ class MicRecorder {
       // 128 or 160 kbit/s – mid-range bitrate quality
       bitRate: 128,
 
+      deviceId: null,
+      // Encode to mp3 after finish recording
+      // Encoding during recording may result in distorted audio
+      // This could be crucial on mobile devices
+      encodeAfterRecord: true,
       // There is a known issue with some macOS machines, where the recording
       // will sometimes have a loud 'pop' or 'pop-click' sound. This flag
       // prevents getting audio from the microphone a few milliseconds after
-      // the begining of the recording. It also helps to remove the mouse
+      // the beginning of the recording. It also helps to remove the mouse
       // "click" sound from the output mp3 file.
       startRecordingAt: 300,
-      deviceId: null,
     };
 
     this.activeStream = null;
@@ -20,6 +24,7 @@ class MicRecorder {
     this.microphone = null;
     this.processor = null;
     this.startTime = 0;
+    this.rawChunksBuffer = null;
 
     Object.assign(this.config, config);
   }
@@ -48,8 +53,15 @@ class MicRecorder {
         return;
       }
 
-      // Send microphone data to LAME for MP3 encoding while recording.
-      this.lameEncoder.encode(event.inputBuffer.getChannelData(0));
+      const rawChunk = event.inputBuffer.getChannelData(0);
+
+      if (this.config.encodeAfterRecord) {
+        // Save copy of raw chunk for future encoding
+        this.rawChunksBuffer.push( Object.assign([], rawChunk));
+      } else {
+        // Send microphone data to LAME for MP3 encoding while recording.
+        this.lameEncoder.encode(rawChunk);
+      }
     };
 
     this.connectMicrophone();
@@ -60,12 +72,15 @@ class MicRecorder {
    * @return Promise
    */
   initialize() {
+    const { deviceId, encodeAfterRecord } = this.config;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     this.context = new AudioContext();
     this.config.sampleRate = this.context.sampleRate;
+    this.rawChunksBuffer = encodeAfterRecord ? [] : null;
     this.lameEncoder = new Encoder(this.config);
+    this.i = 0;
 
-    const audio = this.config.deviceId ? { deviceId: { exact: this.config.deviceId } } : true;
+    const audio = deviceId ? { deviceId: { exact: deviceId } } : true;
 
     return new Promise((resolve, reject) => {
       navigator.mediaDevices.getUserMedia({ audio })
@@ -151,6 +166,13 @@ class MicRecorder {
    * @return Promise
    */
   getMp3() {
+    if (this.config.encodeAfterRecord) {
+      this.rawChunksBuffer.forEach((rawChunk) => {
+        this.lameEncoder.encode(rawChunk);
+      })
+      this.rawChunksBuffer = null;
+    }
+
     const finalBuffer = this.lameEncoder.finish();
 
     return new Promise((resolve, reject) => {

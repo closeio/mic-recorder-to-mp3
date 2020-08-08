@@ -12,6 +12,14 @@
 
     <hr />
 
+    <div title="Warning: Disable this option can cause audio distortion">
+      <input id="encode-after-record" type="checkbox" checked>
+      Encode after record
+    </div>
+
+    <br />
+    <br />
+
     <button id="start-pause" class="btn btn-primary"></button>
     <button id="stop" class="btn btn-danger" disabled></button>
 
@@ -33,20 +41,29 @@
       STOP: 'Stop recording'
     };
 
+    const encodeAfterRecordCheck = document.getElementById('encode-after-record');
     const startPauseButton = document.getElementById('start-pause');
     const stopButton = document.getElementById('stop');
-    const recorder = new MicRecorder({
-      bitRate: 128
-    });
+    let recorder
+    initRecorder()
 
     startPauseButton.textContent = LABELS.START;
     stopButton.textContent = LABELS.STOP;
 
+    encodeAfterRecordCheck.addEventListener('change', initRecorder)
     startPauseButton.addEventListener('click', startRecording);
     stopButton.addEventListener('click', stopRecording);
 
+    function initRecorder() {
+      recorder = new MicRecorder({
+        bitRate: 128,
+        encodeAfterRecordCheck: encodeAfterRecordCheck.checked
+      });
+    }
+
     function startRecording() {
       recorder.start().then(() => {
+        encodeAfterRecordCheck.disabled = true;
         startPauseButton.textContent = LABELS.PAUSE;
         startPauseButton.classList.add('btn-info');
         stopButton.disabled = false;
@@ -71,6 +88,7 @@
     function stopRecording() {
       recorder.stop().getMp3().then(([buffer, blob]) => {
         console.log(buffer, blob);
+        encodeAfterRecordCheck.disabled = false;
         stopButton.disabled = true;
         const file = new File(buffer, 'music.mp3', {
           type: blob.type,
