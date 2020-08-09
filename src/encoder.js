@@ -86,6 +86,6 @@ class Encoder {
 
     return this.dataBuffer;
   }
-};
+}
 
 export default Encoder;
