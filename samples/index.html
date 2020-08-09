@@ -86,10 +86,12 @@
     }
 
     function stopRecording() {
+      stopButton.disabled = true;
+      startPauseButton.disabled = true;
+
       recorder.stop().getMp3().then(([buffer, blob]) => {
         console.log(buffer, blob);
         encodeAfterRecordCheck.disabled = false;
-        stopButton.disabled = true;
         const file = new File(buffer, 'music.mp3', {
           type: blob.type,
           lastModified: Date.now()
@@ -101,6 +103,7 @@
         li.appendChild(player);
         document.querySelector('#playlist').appendChild(li);
 
+        startPauseButton.disabled = false;
         startPauseButton.textContent = LABELS.START;
         startPauseButton.classList.remove('btn-info');
         startPauseButton.removeEventListener('click', startRecording);

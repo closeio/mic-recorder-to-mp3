@@ -16001,32 +16001,64 @@ var MicRecorder = function () {
       return this;
     }
   }, {
-    key: 'getMp3',
+    key: 'encodeRawChunks',
 
 
     /**
-     * Return Mp3 Buffer and Blob with type mp3
+     * Encodes raw audio chunks into mp3
      * @return Promise
      */
-    value: function getMp3() {
+    value: function encodeRawChunks() {
       var _this3 = this;
 
-      if (this.config.encodeAfterRecord) {
-        this.rawChunksBuffer.forEach(function (rawChunk) {
-          _this3.lameEncoder.encode(rawChunk);
+      return this.rawChunksBuffer.reduce(function (previousOperation, rawChunk) {
+        return previousOperation.then(function () {
+          return new Promise(function (resolve) {
+            //this improve browser responsiveness during encoding process
+            setTimeout(function () {
+              _this3.lameEncoder.encode(rawChunk);
+              resolve();
+            });
+          });
         });
-        this.rawChunksBuffer = null;
-      }
+      }, Promise.resolve());
+    }
+
+    /**
+     * Finishes encoding process and returns prepared mp3 file as a result
+     * @return Promise
+     */
+
+  }, {
+    key: 'finishEncoding',
+    value: function finishEncoding() {
+      var _this4 = this;
 
       var finalBuffer = this.lameEncoder.finish();
+      this.rawChunksBuffer = null;
 
       return new Promise(function (resolve, reject) {
         if (finalBuffer.length === 0) {
           reject(new Error('No buffer to send'));
         } else {
           resolve([finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' })]);
-          _this3.lameEncoder.clearBuffer();
+          _this4.lameEncoder.clearBuffer();
         }
+      });
+    }
+
+    /**
+     * Return Mp3 Buffer and Blob with type mp3
+     * @return Promise
+     */
+
+  }, {
+    key: 'getMp3',
+    value: function getMp3() {
+      var _this5 = this;
+
+      return (this.config.encodeAfterRecord ? this.encodeRawChunks() : Promise.resolve()).then(function () {
+        return _this5.finishEncoding();
       });
     }
   }]);

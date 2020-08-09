@@ -162,18 +162,30 @@ class MicRecorder {
   };
 
   /**
-   * Return Mp3 Buffer and Blob with type mp3
+   * Encodes raw audio chunks into mp3
    * @return Promise
    */
-  getMp3() {
-    if (this.config.encodeAfterRecord) {
-      this.rawChunksBuffer.forEach((rawChunk) => {
-        this.lameEncoder.encode(rawChunk);
-      })
-      this.rawChunksBuffer = null;
-    }
+  encodeRawChunks() {
+    return this.rawChunksBuffer.reduce((previousOperation, rawChunk) => {
+      return previousOperation.then(() => {
+        return new Promise((resolve) => {
+          //this improve browser responsiveness during encoding process
+          setTimeout(() => {
+            this.lameEncoder.encode(rawChunk);
+            resolve();
+          });
+        });
+      });
+    }, Promise.resolve());
+  }
 
+  /**
+   * Finishes encoding process and returns prepared mp3 file as a result
+   * @return Promise
+   */
+  finishEncoding() {
     const finalBuffer = this.lameEncoder.finish();
+    this.rawChunksBuffer = null;
 
     return new Promise((resolve, reject) => {
       if (finalBuffer.length === 0) {
@@ -183,7 +195,19 @@ class MicRecorder {
         this.lameEncoder.clearBuffer();
       }
     });
-  };
+  }
+
+  /**
+   * Return Mp3 Buffer and Blob with type mp3
+   * @return Promise
+   */
+  getMp3() {
+    return (
+      this.config.encodeAfterRecord
+        ? this.encodeRawChunks()
+        : Promise.resolve()
+    ).then(() => this.finishEncoding());
+  }
 }
 
 export default MicRecorder;
