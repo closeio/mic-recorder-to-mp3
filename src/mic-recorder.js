@@ -122,4 +122,22 @@ class MicRecorder {
   };
 };
 
+/**
+   * Return Mp3 Buffer and Blob with type audio/mpeg
+   * @return {Promise}
+   */
+  getMp3MimeAudioMpeg() {
+    const finalBuffer = this.lameEncoder.finish();
+
+    return new Promise((resolve, reject) => {
+      if (finalBuffer.length === 0) {
+        reject(new Error('No buffer to send'));
+      } else {
+        resolve([finalBuffer, new Blob(finalBuffer, { type: 'audio/mpeg' })]);
+        this.lameEncoder.clearBuffer();
+      }
+    });
+  };
+};
+
 export default MicRecorder;
