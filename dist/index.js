@@ -165,37 +165,6 @@ var common = {
     "assert": assert$1
 };
 
-/*
- *      MP3 window subband -> subband filtering -> mdct routine
- *
- *      Copyright (c) 1999-2000 Takehiro Tominaga
- *
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
-/*
- *         Special Thanks to Patrick De Smet for your advices.
- */
-
-/* $Id: NewMDCT.java,v 1.11 2011/05/24 20:48:06 kenchis Exp $ */
-
-//package mp3;
-
-//import java.util.Arrays;
-
 var System$6 = common.System;
 var Util$6 = common.Util;
 var Arrays$6 = common.Arrays;
@@ -1335,10 +1304,6 @@ function III_psy_xmin() {
 }
 
 var III_psy_xmin_1 = III_psy_xmin;
-
-//package mp3;
-
-
 
 function III_psy_ratio() {
 	this.thm = new III_psy_xmin_1();
@@ -5390,16 +5355,6 @@ function IIISideInfo() {
 
 var IIISideInfo_1 = IIISideInfo;
 
-//package mp3;
-
-/**
- * Layer III side information.
- *
- * @author Ken
- *
- */
-
-
 var System$11 = common.System;
 var new_int$11 = common.new_int;
 function ScaleFac(arrL, arrS, arr21, arr12) {
@@ -5431,14 +5386,6 @@ var ScaleFac_1 = ScaleFac;
 var new_float$12 = common.new_float;
 var new_float_n$12 = common.new_float_n;
 var new_int$12 = common.new_int;
-//package mp3;
-
-/**
- * Variables used for --nspsytune
- *
- * @author Ken
- *
- */
 function NsPsy() {
     this.last_en_subshort = new_float_n$12([4, 9]);
     this.lastAttacks = new_int$12(4);
@@ -5863,10 +5810,6 @@ function LameInternalFlags$1() {
 var LameInternalFlags_1 = LameInternalFlags$1;
 
 var new_float$13 = common.new_float;
-/**
- * ATH related stuff, if something new ATH related has to be added, please plug
- * it here into the ATH.
- */
 function ATH() {
     /**
      * Method for the auto adjustment.
@@ -5925,101 +5868,8 @@ function ATH() {
 
 var ATH_1 = ATH;
 
-/*
- *  ReplayGainAnalysis - analyzes input samples and give the recommended dB change
- *  Copyright (C) 2001 David Robinson and Glen Sawyer
- *  Improvements and optimizations added by Frank Klemm, and by Marcel Muller 
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *  concept and filter values by David Robinson (David@Robinson.org)
- *    -- blame him if you think the idea is flawed
- *  original coding by Glen Sawyer (mp3gain@hotmail.com)
- *    -- blame him if you think this runs too slowly, or the coding is otherwise flawed
- *
- *  lots of code improvements by Frank Klemm ( http://www.uni-jena.de/~pfk/mpp/ )
- *    -- credit him for all the _good_ programming ;)
- *
- *
- *  For an explanation of the concepts and the basic algorithms involved, go to:
- *    http://www.replaygain.org/
- */
-
-/*
- *  Here's the deal. Call
- *
- *    InitGainAnalysis ( long samplefreq );
- *
- *  to initialize everything. Call
- *
- *    AnalyzeSamples ( var Float_t*  left_samples,
- *                     var Float_t*  right_samples,
- *                     size_t          num_samples,
- *                     int             num_channels );
- *
- *  as many times as you want, with as many or as few samples as you want.
- *  If mono, pass the sample buffer in through left_samples, leave
- *  right_samples NULL, and make sure num_channels = 1.
- *
- *    GetTitleGain()
- *
- *  will return the recommended dB level change for all samples analyzed
- *  SINCE THE LAST TIME you called GetTitleGain() OR InitGainAnalysis().
- *
- *    GetAlbumGain()
- *
- *  will return the recommended dB level change for all samples analyzed
- *  since InitGainAnalysis() was called and finalized with GetTitleGain().
- *
- *  Pseudo-code to process an album:
- *
- *    Float_t       l_samples [4096];
- *    Float_t       r_samples [4096];
- *    size_t        num_samples;
- *    unsigned int  num_songs;
- *    unsigned int  i;
- *
- *    InitGainAnalysis ( 44100 );
- *    for ( i = 1; i <= num_songs; i++ ) {
- *        while ( ( num_samples = getSongSamples ( song[i], left_samples, right_samples ) ) > 0 )
- *            AnalyzeSamples ( left_samples, right_samples, num_samples, 2 );
- *        fprintf ("Recommended dB change for song %2d: %+6.2 dB\n", i, GetTitleGain() );
- *    }
- *    fprintf ("Recommended dB change for whole album: %+6.2 dB\n", GetAlbumGain() );
- */
-
-/*
- *  So here's the main source of potential code confusion:
- *
- *  The filters applied to the incoming samples are IIR filters,
- *  meaning they rely on up to <filter order> number of previous samples
- *  AND up to <filter order> number of previous filtered samples.
- *
- *  I set up the AnalyzeSamples routine to minimize memory usage and interface
- *  complexity. The speed isn't compromised too much (I don't think), but the
- *  internal complexity is higher than it should be for such a relatively
- *  simple routine.
- *
- *  Optimization/clarity suggestions are welcome.
- */
-
 var System$15 = common.System;
 var Arrays$15 = common.Arrays;
-/**
- * Table entries per dB
- */
 GainAnalysis$1.STEPS_per_dB = 100.;
 /**
  * Table entries for 0...MAX_dB (normal max. values are 70...80 dB)
@@ -8080,34 +7930,6 @@ function QuantizePVT$1() {
 }
 
 var QuantizePVT_1 = QuantizePVT$1;
-
-/*
- *	MP3 huffman table selecting and bit counting
- *
- *	Copyright (c) 1999-2005 Takehiro TOMINAGA
- *	Copyright (c) 2002-2005 Gabriel Bouvigne
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
-
-/* $Id: Takehiro.java,v 1.26 2011/05/24 20:48:06 kenchis Exp $ */
-
-//package mp3;
-
-//import java.util.Arrays;
 
 var System$18 = common.System;
 var Arrays$18 = common.Arrays;
@@ -12652,36 +12474,6 @@ function CalcNoiseData() {
 
 var CalcNoiseData_1 = CalcNoiseData;
 
-/*
- * MP3 quantization
- *
- *      Copyright (c) 1999-2000 Mark Taylor
- *      Copyright (c) 1999-2003 Takehiro Tominaga
- *      Copyright (c) 2000-2007 Robert Hegemann
- *      Copyright (c) 2001-2005 Gabriel Bouvigne
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.     See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
-
-/* $Id: Quantize.java,v 1.24 2011/05/24 20:48:06 kenchis Exp $ */
-
-//package mp3;
-
-//import java.util.Arrays;
-
 var System$21 = common.System;
 var VbrMode$21 = common.VbrMode;
 var Util$21 = common.Util;
@@ -14142,73 +13934,6 @@ function Quantize$1() {
 }
 
 var Quantize_1 = Quantize$1;
-
-/*
- *      bit reservoir source file
- *
- *      Copyright (c) 1999-2000 Mark Taylor
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
-
-/* $Id: Reservoir.java,v 1.9 2011/05/24 20:48:06 kenchis Exp $ */
-
-//package mp3;
-
-/**
- * ResvFrameBegin:<BR>
- * Called (repeatedly) at the beginning of a frame. Updates the maximum size of
- * the reservoir, and checks to make sure main_data_begin was set properly by
- * the formatter<BR>
- * Background information:
- * 
- * This is the original text from the ISO standard. Because of sooo many bugs
- * and irritations correcting comments are added in brackets []. A '^W' means
- * you should remove the last word.
- * 
- * <PRE>
- *  1. The following rule can be used to calculate the maximum
- *     number of bits used for one granule [^W frame]:<BR>
- *     At the highest possible bitrate of Layer III (320 kbps
- *     per stereo signal [^W^W^W], 48 kHz) the frames must be of
- *     [^W^W^W are designed to have] constant length, i.e.
- *     one buffer [^W^W the frame] length is:<BR>
- * 
- *         320 kbps * 1152/48 kHz = 7680 bit = 960 byte
- * 
- *     This value is used as the maximum buffer per channel [^W^W] at
- *     lower bitrates [than 320 kbps]. At 64 kbps mono or 128 kbps
- *     stereo the main granule length is 64 kbps * 576/48 kHz = 768 bit
- *     [per granule and channel] at 48 kHz sampling frequency.
- *     This means that there is a maximum deviation (short time buffer
- *     [= reservoir]) of 7680 - 2*2*768 = 4608 bits is allowed at 64 kbps.
- *     The actual deviation is equal to the number of bytes [with the
- *     meaning of octets] denoted by the main_data_end offset pointer.
- *     The actual maximum deviation is (2^9-1)*8 bit = 4088 bits
- *     [for MPEG-1 and (2^8-1)*8 bit for MPEG-2, both are hard limits].
- *     ... The xchange of buffer bits between the left and right channel
- *     is allowed without restrictions [exception: dual channel].
- *     Because of the [constructed] constraint on the buffer size
- *     main_data_end is always set to 0 in the case of bit_rate_index==14,
- *     i.e. data rate 320 kbps per stereo signal [^W^W^W]. In this case
- *     all data are allocated between adjacent header [^W sync] words
- *     [, i.e. there is no buffering at all].
- * </PRE>
- */
-
 
 var assert$23 = common.assert;
 
@@ -15808,6 +15533,8 @@ var Encoder = function () {
   return Encoder;
 }();
 
+var inlineProcessor = "\nclass RecorderProcessor extends AudioWorkletProcessor {\n    constructor() {\n      super();\n      this.bufferSize = 1152;\n      this.buffer = new Float32Array(this.bufferSize);\n      this.bytesWritten = 0;\n      this.bytesWritten = 0;\n      this.port.onmessage = (e) => {\n        const data = e.data;\n        switch (data.action) {\n          case \"stop\":\n            this._flush();\n            break;\n        }\n      };\n    }\n    process(inputs) {\n      const samples = inputs[0][0];\n      if (!samples)\n        return true;\n      for (let i = 0; i < samples.length; i++) {\n        this.buffer[this.bytesWritten++] = samples[i];\n        if (this.bytesWritten >= this.bufferSize) {\n          this._flush();\n        }\n      }\n      return true;\n    }\n    _flush() {\n      const buffer = this.bytesWritten < this.bufferSize ? this.buffer.slice(0, this.bytesWritten) : this.buffer;\n      if (buffer.length) {\n        this.port.postMessage({\n          action: \"encode\",\n          buffer\n        });\n      }\n      this.bytesWritten = 0;\n    }\n  };\n  registerProcessor(\"recorder.processor\", RecorderProcessor);\n";
+
 var MicRecorder = function () {
   function MicRecorder(config) {
     classCallCheck(this, MicRecorder);
@@ -15830,64 +15557,91 @@ var MicRecorder = function () {
     this.microphone = null;
     this.processor = null;
     this.startTime = 0;
+    this.workletUrl = URL.createObjectURL(new Blob([inlineProcessor], {
+      type: "application/javascript;charset=utf8"
+    }));
 
     Object.assign(this.config, config);
   }
 
-  /**
-   * Starts to listen for the microphone sound
-   * @param {MediaStream} stream
-   */
-
-
   createClass(MicRecorder, [{
-    key: 'addMicrophoneListener',
-    value: function addMicrophoneListener(stream) {
+    key: "createRecorderProcessor",
+    value: function createRecorderProcessor() {
       var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        try {
+          resolve(new AudioWorkletNode(_this.context, "recorder.processor"));
+        } catch (error) {
+          _this.context.audioWorklet.addModule(_this.workletUrl).then(function () {
+            return resolve(new AudioWorkletNode(_this.context, "recorder.processor"));
+          }).catch(function (e) {
+            return reject(e);
+          });
+        }
+      });
+    }
+    /**
+     * Starts to listen for the microphone sound
+     * @param {MediaStream} stream
+     */
+
+  }, {
+    key: "addMicrophoneListener",
+    value: function addMicrophoneListener(stream) {
+      var _this2 = this;
 
       this.activeStream = stream;
 
       // This prevents the weird noise once you start listening to the microphone
       this.timerToStart = setTimeout(function () {
-        delete _this.timerToStart;
+        delete _this2.timerToStart;
       }, this.config.startRecordingAt);
 
       // Set up Web Audio API to process data from the media stream (microphone).
       this.microphone = this.context.createMediaStreamSource(stream);
 
-      // Settings a bufferSize of 0 instructs the browser to choose the best bufferSize
-      this.processor = this.context.createScriptProcessor(0, 1, 1);
+      return new Promise(function (resolve, reject) {
+        _this2.createRecorderProcessor().then(function (processor) {
+          _this2.processor = processor;
+          _this2.processor.port.onmessage = function (event) {
+            if (event.data.action === "encode") {
+              if (_this2.timerToStart) {
+                return;
+              }
 
-      // Add all buffers from LAME into an array.
-      this.processor.onaudioprocess = function (event) {
-        if (_this.timerToStart) {
-          return;
-        }
+              // Send microphone data to LAME for MP3 encoding while recording.
+              _this2.lameEncoder.encode(event.data.buffer);
+            }
+          };
 
-        // Send microphone data to LAME for MP3 encoding while recording.
-        _this.lameEncoder.encode(event.inputBuffer.getChannelData(0));
-      };
+          // Begin retrieving microphone data.
+          _this2.microphone.connect(_this2.processor);
+          _this2.processor.connect(_this2.context.destination);
 
-      // Begin retrieving microphone data.
-      this.microphone.connect(this.processor);
-      this.processor.connect(this.context.destination);
+          resolve();
+        }).catch(function (e) {
+          return reject(e);
+        });
+      });
     }
-  }, {
-    key: 'stop',
-
 
     /**
      * Disconnect microphone, processor and remove activeStream
      */
+
+  }, {
+    key: "stop",
     value: function stop() {
       if (this.processor && this.microphone) {
         // Clean up the Web Audio API resources.
+        this.processor.port.postMessage({ action: "stop" });
         this.microphone.disconnect();
         this.processor.disconnect();
 
         // If all references using this.context are destroyed, context is closed
         // automatically. DOMException is fired when trying to close again
-        if (this.context && this.context.state !== 'closed') {
+        if (this.context && this.context.state !== "closed") {
           this.context.close();
         }
 
@@ -15901,16 +15655,16 @@ var MicRecorder = function () {
 
       return this;
     }
-  }, {
-    key: 'start',
-
 
     /**
      * Requests access to the microphone and start recording
      * @return Promise
      */
+
+  }, {
+    key: "start",
     value: function start() {
-      var _this2 = this;
+      var _this3 = this;
 
       var AudioContext = window.AudioContext || window.webkitAudioContext;
       this.context = new AudioContext();
@@ -15921,32 +15675,33 @@ var MicRecorder = function () {
 
       return new Promise(function (resolve, reject) {
         navigator.mediaDevices.getUserMedia({ audio: audio }).then(function (stream) {
-          _this2.addMicrophoneListener(stream);
-          resolve(stream);
+          return _this3.addMicrophoneListener(stream);
+        }).then(function () {
+          return resolve();
         }).catch(function (err) {
           reject(err);
         });
       });
     }
-  }, {
-    key: 'getMp3',
-
 
     /**
      * Return Mp3 Buffer and Blob with type mp3
      * @return {Promise}
      */
+
+  }, {
+    key: "getMp3",
     value: function getMp3() {
-      var _this3 = this;
+      var _this4 = this;
 
       var finalBuffer = this.lameEncoder.finish();
 
       return new Promise(function (resolve, reject) {
         if (finalBuffer.length === 0) {
-          reject(new Error('No buffer to send'));
+          reject(new Error("No buffer to send"));
         } else {
-          resolve([finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' })]);
-          _this3.lameEncoder.clearBuffer();
+          resolve([finalBuffer, new Blob(finalBuffer, { type: "audio/mp3" })]);
+          _this4.lameEncoder.clearBuffer();
         }
       });
     }
