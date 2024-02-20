@@ -1,4 +1,4 @@
-import Encoder from './encoder';
+import Encoder from "./encoder";
 
 class MicRecorder {
   constructor(config) {
@@ -55,7 +55,7 @@ class MicRecorder {
     // Begin retrieving microphone data.
     this.microphone.connect(this.processor);
     this.processor.connect(this.context.destination);
-  };
+  }
 
   /**
    * Disconnect microphone, processor and remove activeStream
@@ -68,18 +68,18 @@ class MicRecorder {
 
       // If all references using this.context are destroyed, context is closed
       // automatically. DOMException is fired when trying to close again
-      if (this.context && this.context.state !== 'closed') {
+      if (this.context && this.context.state !== "closed") {
         this.context.close();
       }
 
       this.processor.onaudioprocess = null;
 
       // Stop all audio tracks. Also, removes recording icon from chrome tab
-      this.activeStream.getAudioTracks().forEach(track => track.stop());
+      this.activeStream.getAudioTracks().forEach((track) => track.stop());
     }
 
     return this;
-  };
+  }
 
   /**
    * Requests access to the microphone and start recording
@@ -91,18 +91,43 @@ class MicRecorder {
     this.config.sampleRate = this.context.sampleRate;
     this.lameEncoder = new Encoder(this.config);
 
-    const audio = this.config.deviceId ? { deviceId: { exact: this.config.deviceId } } : true;
+    const audio = this.config.deviceId
+      ? { deviceId: { exact: this.config.deviceId } }
+      : true;
 
     return new Promise((resolve, reject) => {
-      navigator.mediaDevices.getUserMedia({ audio })
-        .then(stream => {
+      navigator.mediaDevices
+        .getUserMedia({ audio })
+        .then((stream) => {
           this.addMicrophoneListener(stream);
           resolve(stream);
-        }).catch(function(err) {
+        })
+        .catch(function (err) {
           reject(err);
         });
-    })
-  };
+    });
+  }
+
+  /**
+   * Start recording with available stream from microphone
+   * @param {mediaSteam} stream
+   * @return Promise
+   */
+  startWithStream(stream) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    this.context = new AudioContext();
+    this.config.sampleRate = this.context.sampleRate;
+    this.lameEncoder = new Encoder(this.config);
+
+    return new Promise((resolve, reject) => {
+      if (stream) {
+        this.addMicrophoneListener(stream);
+        resolve(stream);
+      } else {
+        reject(new Error("stream not found"));
+      }
+    });
+  }
 
   /**
    * Return Mp3 Buffer and Blob with type mp3
@@ -113,13 +138,13 @@ class MicRecorder {
 
     return new Promise((resolve, reject) => {
       if (finalBuffer.length === 0) {
-        reject(new Error('No buffer to send'));
+        reject(new Error("No buffer to send"));
       } else {
-        resolve([finalBuffer, new Blob(finalBuffer, { type: 'audio/mp3' })]);
+        resolve([finalBuffer, new Blob(finalBuffer, { type: "audio/mp3" })]);
         this.lameEncoder.clearBuffer();
       }
     });
-  };
-};
+  }
+}
 
 export default MicRecorder;
